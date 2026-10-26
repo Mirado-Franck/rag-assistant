@@ -1,0 +1,30 @@
+# Environnement virtuel local (non partagé / non versionné)
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Données générées ou privées
+# Les deux PDF de démonstration déjà présents dans le dépôt sont conservés.
+data/raw/*
+data/raw/uploads/
+!data/raw/.gitkeep
+!data/raw/test.pdf
+!data/raw/upload-test.pdf
+data/processed/*
+!data/processed/.gitkeep
+data/chroma_db/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.key
