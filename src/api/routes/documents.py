@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.stockage import obtenir_tous_les_documents, obtenir_document
+from src.api.stockage import obtenir_tous_les_documents, obtenir_document
 
 router = APIRouter()
 

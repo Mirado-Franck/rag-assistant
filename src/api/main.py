@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes.upload import router as upload_router
-from app.routes.documents import router as documents_router
+from src.api.routes.upload import router as upload_router
+from src.api.routes.documents import router as documents_router
 
 # Créer l'application FastAPI
 app = FastAPI(

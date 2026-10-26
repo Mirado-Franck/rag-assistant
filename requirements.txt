@@ -1,0 +1,16 @@
+# Dépendances de l'API et du traitement PDF déjà présent dans le dépôt
+fastapi
+uvicorn
+python-multipart
+PyMuPDF
+
+# Bibliothèques listées dans le guide du Jour 1
+langchain
+langchain-community
+langchain-ollama
+chromadb
+sentence-transformers
+streamlit
+PyPDF2
+requests
+ollama

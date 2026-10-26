@@ -1,4 +1,0 @@
-PyMuPDF
-fastapi
-uvicorn
-python-multipart
