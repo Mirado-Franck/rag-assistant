@@ -5,7 +5,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from src.api.stockage import ajouter_document
 from src.ingestion.decoupage import decouper_document
-from src.ingestion.extraction import extraire_texte, obtenir_nom_fichier
+from src.ingestion.extract import extraire_texte, obtenir_nom_fichier
 
 router = APIRouter()
 
