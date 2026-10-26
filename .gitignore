@@ -7,12 +7,17 @@ __pycache__/
 *.py[cod]
 
 # Données générées ou privées
-# Les deux PDF de démonstration déjà présents dans le dépôt sont conservés.
+# Documents sources autorisés dans le dépôt
 data/raw/*
-data/raw/uploads/
 !data/raw/.gitkeep
-!data/raw/test.pdf
-!data/raw/upload-test.pdf
+!data/raw/*.pdf
+!data/raw/*.html
+!data/raw/*.docx
+
+# Téléversements utilisateurs : exclus du dépôt
+data/raw/uploads/
+
+# Données traitées
 data/processed/*
 !data/processed/.gitkeep
 data/chroma_db/
