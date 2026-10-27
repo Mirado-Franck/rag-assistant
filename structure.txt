@@ -1,0 +1,96 @@
+﻿├── .git/
+├── .gitignore
+├── data/
+│   ├── chunks/
+│   │   └── all_chunks.json
+│   ├── processed/
+│   │   ├── .gitkeep
+│   │   ├── _backup_avant_nettoyage/
+│   │   │   ├── 01_reglement_interieur.txt
+│   │   │   ├── 02_guide_bourses.txt
+│   │   │   ├── 03_reglement_examens.txt
+│   │   │   ├── 04_guide_etudiant.txt
+│   │   │   ├── 05_procedure_inscription.txt
+│   │   │   ├── 06_reglement_bibliotheque.txt
+│   │   │   ├── 07_procedure_disciplinaire.txt
+│   │   │   ├── 08_guide_stages.txt
+│   │   │   ├── 09_calendrier_universitaire.txt
+│   │   │   ├── 10_organisation_pedagogique.txt
+│   │   │   ├── 11_reglement_residence.txt
+│   │   │   ├── 12_guide_mobilite.txt
+│   │   │   ├── 17_circulaire_examens.txt
+│   │   │   ├── 18_convention_stage.txt
+│   │   │   ├── 19_formulaire_bourse.txt
+│   │   │   └── 20_compte_rendu_conseil.txt
+│   │   ├── _clean_report.json
+│   │   ├── 01_reglement_interieur.txt
+│   │   ├── 02_guide_bourses.txt
+│   │   ├── 03_reglement_examens.txt
+│   │   ├── 04_guide_etudiant.txt
+│   │   ├── 05_procedure_inscription.txt
+│   │   ├── 06_reglement_bibliotheque.txt
+│   │   ├── 07_procedure_disciplinaire.txt
+│   │   ├── 08_guide_stages.txt
+│   │   ├── 09_calendrier_universitaire.txt
+│   │   ├── 10_organisation_pedagogique.txt
+│   │   ├── 11_reglement_residence.txt
+│   │   ├── 12_guide_mobilite.txt
+│   │   ├── 17_circulaire_examens.txt
+│   │   ├── 18_convention_stage.txt
+│   │   ├── 19_formulaire_bourse.txt
+│   │   └── 20_compte_rendu_conseil.txt
+│   └── raw/
+│       ├── .gitkeep
+│       ├── 01_reglement_interieur.pdf
+│       ├── 02_guide_bourses.pdf
+│       ├── 03_reglement_examens.pdf
+│       ├── 04_guide_etudiant.pdf
+│       ├── 05_procedure_inscription.pdf
+│       ├── 06_reglement_bibliotheque.pdf
+│       ├── 07_procedure_disciplinaire.pdf
+│       ├── 08_guide_stages.pdf
+│       ├── 09_calendrier_universitaire.pdf
+│       ├── 10_organisation_pedagogique.pdf
+│       ├── 11_reglement_residence.pdf
+│       ├── 12_guide_mobilite.pdf
+│       ├── 13_faq_inscriptions.html
+│       ├── 14_avis_rentree_2026.html
+│       ├── 15_annuaire_services.html
+│       ├── 16_avis_campagne_bourses.html
+│       ├── 17_circulaire_examens.docx
+│       ├── 18_convention_stage.docx
+│       ├── 19_formulaire_bourse.docx
+│       ├── 20_compte_rendu_conseil.docx
+│       └── clean.py
+├── docs/
+│   └── .gitkeep
+├── interface/
+│   ├── .gitkeep
+│   └── app.py
+├── jour3.md
+├── README.md
+├── requirements.txt
+├── src/
+│   ├── __init__.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── routes/
+│   │   │   ├── __init__.py
+│   │   │   ├── documents.py
+│   │   │   └── upload.py
+│   │   └── stockage.py
+│   ├── ingestion/
+│   │   ├── __init__.py
+│   │   ├── chunk.py
+│   │   ├── clean.py
+│   │   ├── decoupage.py
+│   │   └── extract.py
+│   └── rag/
+│       ├── .gitkeep
+│       └── classifier.py
+├── test_streamlit.py
+├── tests/
+│   └── .gitkeep
+├── tree.ps1
+└── venv/
