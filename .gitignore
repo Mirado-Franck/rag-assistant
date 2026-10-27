@@ -1,3 +1,4 @@
+
 # Environnement virtuel local (non partagé / non versionné)
 venv/
 .venv/
@@ -6,20 +7,42 @@ venv/
 __pycache__/
 *.py[cod]
 
-# Données générées ou privées
-# Documents sources autorisés dans le dépôt
+# Données sources : documents autorisés dans le dépôt
 data/raw/*
 !data/raw/.gitkeep
 !data/raw/*.pdf
 !data/raw/*.html
+!data/raw/*.htm
+!data/raw/*.doc
 !data/raw/*.docx
+!data/raw/*.xls
+!data/raw/*.xlsx
+!data/raw/*.csv
+!data/raw/*.txt
+!data/raw/*.ppt
+!data/raw/*.pptx
+!data/raw/*.odt
+!data/raw/*.ods
+!data/raw/*.rtf
+!data/raw/*.py
 
 # Téléversements utilisateurs : exclus du dépôt
 data/raw/uploads/
 
-# Données traitées
+# Données traitées : autoriser les fichiers TXT et JSON
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/*.txt
+!data/processed/*.json
+!data/processed/_backup_avant_nettoyage/
+!data/processed/_backup_avant_nettoyage/*.txt
+
+# Chunks générés : autoriser les fichiers JSON
+!data/chunks/
+data/chunks/*
+!data/chunks/*.json
+
+# Base vectorielle générée
 data/chroma_db/
 
 # IDE
