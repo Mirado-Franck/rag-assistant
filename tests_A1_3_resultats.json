@@ -1,0 +1,27 @@
+{
+  "01_reglement_interieur.txt": {
+    "categorie": "Règlements",
+    "confiance": 0.95,
+    "justification": "Le texte présente un ton formel et une structure typique de règlement, avec des articles et des titres, et contient des dispositions obligatoires et sanctionnées, tels que l'annexe du règlement et la publication du règlement sur le portail de l'université."
+  },
+  "05_procedure_inscription.txt": {
+    "categorie": "Procédures",
+    "confiance": 0.95,
+    "justification": "Le texte décrit une démarche administrative stricte avec des étapes numérotées et obligatoires (dépôt du dossier complet, paiement des frais, validation par le service de la scolarité), ce qui caractérise une procédure administrative."
+  },
+  "08_guide_stages.txt": {
+    "categorie": "Guides pratiques",
+    "confiance": 0.95,
+    "justification": "Le texte présente un guide qui explique le contexte (crédits, objectifs, modalités) du stage et donne des conseils pratiques sur la façon de procéder (remplir le formulaire, joindre la lettre d'accueil, déposer le dossier, etc.)"
+  },
+  "09_calendrier_universitaire.txt": {
+    "categorie": "Organisation & plannings",
+    "confiance": 0.95,
+    "justification": "Le texte présente un calendrier détaillé avec des dates et des événements spécifiques, indiquant quand se passent des actions et des événements dans l'année académique, sans détailler des étapes administratives obligatoires."
+  },
+  "19_formulaire_bourse.txt": {
+    "categorie": "Formulaires & documents ponctuels",
+    "confiance": 0.95,
+    "justification": "Le texte présente une structure de formulaire avec des cases vides et des exigences spécifiques pour chaque section, ce qui est caractéristique de documents ponctuels comme des formulaires de demande de bourse."
+  }
+}
