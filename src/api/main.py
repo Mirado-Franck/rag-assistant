@@ -146,9 +146,9 @@ def extract_uploaded_text(filename: str, content: bytes) -> tuple[str, int]:
     extension = Path(filename).suffix.lower()
     if extension == ".pdf":
         try:
-            import fitz
+            import pymupdf
 
-            with fitz.open(stream=content, filetype="pdf") as pdf:
+            with pymupdf.open(stream=content, filetype="pdf") as pdf:
                 page_texts = [page.get_text().strip() for page in pdf]
                 return "\n\n".join(text for text in page_texts if text), len(page_texts)
         except Exception as exc:
