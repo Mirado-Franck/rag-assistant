@@ -3,6 +3,7 @@ fastapi
 uvicorn
 python-multipart
 PyMuPDF
+python-docx
 
 # Bibliothèques listées dans le guide du Jour 1
 langchain

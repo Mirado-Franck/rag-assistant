@@ -74,25 +74,25 @@
   "17_circulaire_examens.txt": {
     "categorie": "Procédures",
     "date_ajout": "2026-10-27",
-    "type_original": "PDF",
+    "type_original": "DOCX",
     "pages": 9
   },
   "18_convention_stage.txt": {
     "categorie": "Formulaires & documents ponctuels",
     "date_ajout": "2026-10-27",
-    "type_original": "PDF",
+    "type_original": "DOCX",
     "pages": 8
   },
   "19_formulaire_bourse.txt": {
     "categorie": "Formulaires & documents ponctuels",
     "date_ajout": "2026-10-27",
-    "type_original": "PDF",
+    "type_original": "DOCX",
     "pages": 6
   },
   "20_compte_rendu_conseil.txt": {
     "categorie": "Organisation & plannings",
     "date_ajout": "2026-10-27",
-    "type_original": "PDF",
+    "type_original": "DOCX",
     "pages": 10
   }
 }
