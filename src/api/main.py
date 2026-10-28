@@ -186,7 +186,31 @@ def extract_uploaded_text(filename: str, content: bytes) -> tuple[str, int]:
 
 
 def classify_text_mock(text: str) -> dict[str, Any]:
-    """Classification heuristique provisoire, en attendant l'intégration A1."""
+    """Classification heuristique provisoire, en attendant l'intégration A1.
+
+    Le titre du document est examiné avant le corps du texte : un règlement
+    peut mentionner des dates/calendriers sans devenir un document de planning.
+    """
+    title_rules = [
+        ("Règlements", ("règlement", "reglement", "code général", "code general", "statut")),
+        ("Formulaires & documents ponctuels", ("formulaire", "attestation", "convention")),
+        ("Procédures", ("procédure", "procedure", "démarche", "demarche")),
+        ("Organisation & plannings", ("calendrier", "planning", "emploi du temps", "organigramme")),
+        ("Guides pratiques", ("guide", "foire aux questions", "faq")),
+    ]
+    for line in (line.strip().casefold() for line in text.splitlines()[:15]):
+        if not line or len(line) > 140:
+            continue
+        for category, keywords in title_rules:
+            if any(keyword in line for keyword in keywords):
+                return {
+                    "categorie": category,
+                    "confiance": 0.93,
+                    "justification": "La catégorie est déterminée à partir du titre du document (classification simulée).",
+                    "alternatives": [],
+                    "needs_confirmation": False,
+                }
+
     sample = text[:5000].casefold()
     rules = [
         (
