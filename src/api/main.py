@@ -4,11 +4,9 @@ from __future__ import annotations
 
 import json
 import re
-import time
-import unicodedata
 import uuid
 from collections import Counter
-from datetime import date
+from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 from typing import Any
@@ -16,6 +14,11 @@ from typing import Any
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+
+from src.ingestion.ingest_upload import (
+    UploadedDocumentIngestionError,
+    ingest_uploaded_document,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 UPLOAD_DIR = PROJECT_ROOT / "data" / "uploads"
@@ -129,7 +132,7 @@ def save_registry(registry: dict[str, dict[str, Any]]) -> None:
 
 
 def load_chunks() -> list[dict[str, Any]]:
-    """Charge les chunks disponibles pour les statistiques et la réponse mock."""
+    """Charge les chunks du corpus initial pour les statistiques historiques."""
     if not CHUNKS_FILE.exists():
         return []
     try:
@@ -274,11 +277,6 @@ def classify_text_mock(text: str) -> dict[str, Any]:
     }
 
 
-def _normalize_text(value: str) -> str:
-    normalized = unicodedata.normalize("NFKD", value.casefold())
-    return "".join(char for char in normalized if not unicodedata.combining(char))
-
-
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
@@ -345,7 +343,7 @@ async def upload_document(file: UploadFile = File(...)) -> ClassificationResult:
 
 @app.post("/api/confirm", tags=["Documents"])
 def confirm_classification(request: ConfirmRequest) -> dict[str, Any]:
-    """Confirme la catégorie et ajoute le document au registre partagé."""
+    """Confirme la catégorie, indexe le fichier dans ChromaDB et met à jour le registre."""
     if request.categorie not in CATEGORIES:
         raise HTTPException(status_code=400, detail=f"Catégorie invalide. Choix : {CATEGORIES}")
     if not re.fullmatch(r"[0-9a-fA-F]{8}", request.file_id):
@@ -358,109 +356,71 @@ def confirm_classification(request: ConfirmRequest) -> dict[str, Any]:
     stored_path = matches[0]
     original_name = stored_path.name[len(request.file_id) + 1 :]
     try:
-        _, page_count = extract_uploaded_text(original_name, stored_path.read_bytes())
+        text, page_count = extract_uploaded_text(original_name, stored_path.read_bytes())
     except HTTPException:
-        page_count = 0
+        raise
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail=f"Impossible de lire le fichier uploadé : {exc}") from exc
 
-    registry = load_registry()
-    registry_key = stored_path.name
-    registry_entry: dict[str, Any] = {
-        "categorie": request.categorie,
-        "date_ajout": date.today().isoformat(),
-        "type_original": stored_path.suffix.lstrip(".").upper(),
-        "chunks_count": 0,
-        "status": "confirmé, indexation à effectuer",
-    }
-    # DOCX n'a pas de pagination fixe, et 0 pages invaliderait le registre.
-    if page_count > 0:
-        registry_entry["pages"] = page_count
-    registry[registry_key] = registry_entry
-    save_registry(registry)
+    if len(text.strip()) < 50:
+        raise HTTPException(
+            status_code=422,
+            detail="Le fichier ne contient pas assez de texte exploitable pour être indexé.",
+        )
+
+    try:
+        chunks_count = ingest_uploaded_document(
+            filename=stored_path.name,
+            text=text,
+            categorie=request.categorie,
+            pages=page_count,
+        )
+    except UploadedDocumentIngestionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"Échec de l'indexation du document : {exc}") from exc
 
     return {
         "status": "success",
-        "message": (
-            f"Document '{original_name}' confirmé et ajouté au registre. "
-            "L'indexation ChromaDB sera connectée lors de l'intégration suivante."
-        ),
+        "message": f"Document '{original_name}' confirmé et indexé dans ChromaDB.",
         "file_id": request.file_id,
+        "source_file": stored_path.name,
         "categorie": request.categorie,
-        "indexe": False,
+        "indexe": True,
+        "chunks_count": chunks_count,
     }
+
+
+@lru_cache(maxsize=1)
+def get_rag_pipeline() -> Any:
+    """Initialise le RAG à la première requête et le réutilise ensuite."""
+    from src.rag.rag_pipeline import RAGPipeline
+
+    return RAGPipeline()
 
 
 @app.post("/api/query", response_model=QueryResponse, tags=["Recherche"])
 def query_documents(request: QueryRequest) -> QueryResponse:
-    """Réponse mock et extraits filtrés ; le vrai pipeline RAG est intégré plus tard."""
-    started = time.perf_counter()
+    """Exécute une recherche et une génération de réponse avec le pipeline RAG."""
     if request.category and request.category not in CATEGORIES:
         raise HTTPException(status_code=400, detail=f"Catégorie invalide. Choix : {CATEGORIES}")
 
-    registry = load_registry()
-    eligible_chunks = []
-    for chunk in load_chunks():
-        source = chunk.get("source", "")
-        metadata = registry.get(source, {})
-        if request.category and metadata.get("categorie") != request.category:
-            continue
-        if request.source_file and source != request.source_file:
-            continue
-        eligible_chunks.append(chunk)
-
-    query_terms = {
-        token
-        for token in re.findall(r"[\wÀ-ÿ]+", _normalize_text(request.question))
-        if len(token) > 2
-    }
-
-    def score(chunk: dict[str, Any]) -> int:
-        text = _normalize_text(str(chunk.get("text", "")))
-        return sum(term in text for term in query_terms)
-
-    ranked = sorted(eligible_chunks, key=score, reverse=True)[: request.n_results]
-    sources: list[dict[str, str]] = []
-    seen: set[tuple[str, int]] = set()
-    for chunk in ranked:
-        source = str(chunk.get("source", "inconnu"))
-        chunk_index = int(chunk.get("chunk_index", 0))
-        key = (source, chunk_index)
-        if key in seen:
-            continue
-        seen.add(key)
-        sources.append(
-            {
-                "fichier": source,
-                "categorie": str(registry.get(source, {}).get("categorie", "Non classifié")),
-                "extrait": str(chunk.get("text", ""))[:250],
-            }
+    try:
+        result = get_rag_pipeline().query(
+            question=request.question,
+            n_results=request.n_results,
+            category=request.category,
+            source_file=request.source_file,
         )
-
-    if sources:
-        answer = (
-            f"[MOCK] {len(sources)} extrait(s) trouvé(s). "
-            "La génération de réponse par le pipeline RAG sera connectée lors de l'intégration."
-        )
-    else:
-        answer = "Je ne trouve pas cette information dans les documents disponibles."
-
-    if request.category and request.source_file:
-        filter_label = f"catégorie={request.category} + fichier={request.source_file}"
-    elif request.category:
-        filter_label = f"catégorie={request.category}"
-    elif request.source_file:
-        filter_label = f"fichier={request.source_file}"
-    else:
-        filter_label = "aucun (tous les documents)"
-
-    elapsed_ms = (time.perf_counter() - started) * 1000
-    return QueryResponse(
-        question=request.question,
-        reponse=answer,
-        sources=sources,
-        filtre=filter_label,
-        temps_ms=round(elapsed_ms, 1),
-        nb_chunks_trouves=len(ranked),
-    )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Le pipeline RAG n'est pas disponible. Vérifie que ChromaDB est indexé, "
+                f"que le modèle d'embedding est installé et qu'Ollama sert {LLM_MODEL!r}. Détail : {exc}"
+            ),
+        ) from exc
+    return QueryResponse(**result)
 
 
 @app.get("/api/documents", response_model=list[DocumentInfo], tags=["Documents"])

@@ -3,10 +3,11 @@ from chromadb.config import Settings
 from langchain_ollama import ChatOllama
 from sentence_transformers import SentenceTransformer
 import time
-import os
+from pathlib import Path
 
-# Configuration
-CHROMA_DIR = "data/chroma_db"
+# Configuration — indépendante du répertoire depuis lequel l'API est lancée.
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CHROMA_DIR = str(PROJECT_ROOT / "data" / "chroma_db")
 COLLECTION_NAME = "documents"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 LLM_MODEL = "llama3.2"
@@ -88,7 +89,11 @@ class RAGPipeline:
             where_filter = {"source": source_file}
         
         # Calculer l'embedding de la question
-        query_embedding = self.embedder.encode(question).tolist()
+        query_embedding = self.embedder.encode(
+            question,
+            normalize_embeddings=True,
+            convert_to_numpy=True,
+        ).tolist()
         
         # Requête ChromaDB
         try:
@@ -99,8 +104,7 @@ class RAGPipeline:
                 include=["documents", "metadatas", "distances"]
             )
         except Exception as e:
-            print(f"  ⚠️ Erreur de recherche : {e}")
-            return []
+            raise RuntimeError(f"Erreur de recherche ChromaDB : {e}") from e
         
         # Formater les résultats
         chunks = []
