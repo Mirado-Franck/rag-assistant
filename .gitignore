@@ -27,6 +27,7 @@ data/raw/*
 !data/raw/*.py
 
 # Téléversements utilisateurs : exclus du dépôt
+data/uploads/
 data/raw/uploads/
 
 # Données traitées : autoriser les fichiers TXT et JSON
