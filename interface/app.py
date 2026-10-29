@@ -1,67 +1,121 @@
+"""
+app.py — Accueil de DocuClassif AI (Jour 3, partie B1).
+
+Lancement :  streamlit run interface/app.py
+"""
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # -> interface/
+
 import streamlit as st
-import time
 
-# Configuration de la page
-st.set_page_config(
-    page_title="Assistant RAG",
-    page_icon="📚",
-    layout="wide"
+import nav
+import theme
+from data_mock import APP_NAME, APP_TAGLINE, CATEGORIES, STATS
+
+nav.setup("accueil", "Accueil", "◼")
+
+# ---------------------------------------------------------------------------
+# En-tête
+# ---------------------------------------------------------------------------
+theme.page_header(
+    APP_NAME,
+    APP_TAGLINE,
+    eyebrow="Accueil",
+)
+theme.html(
+    '<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin:.2rem 0 .4rem 0">'
+    + theme.badge("100 % offline")
+    + theme.badge("Maquette · Jour 3", warn=True)
+    + "</div>"
 )
 
-# Titre
-st.title("📚 Assistant Questions-Réponses")
-st.caption("IA locale — Aucune donnée envoyée à l'extérieur")
-st.divider()
-
-# Barre latérale
-with st.sidebar:
-    st.header("⚙️ Configuration")
-    st.text("Modèle : Llama 3.2 3B")
-    st.text("Moteur : Ollama (local)")
-    st.text("Base : ChromaDB")
-    st.divider()
-    st.header("📊 Statistiques")
-    st.text("Documents : 15")
-    st.text("Chunks : 281")
-    st.divider()
-    st.caption("🔒 Souveraineté des données")
-    st.caption("Toutes les données restent sur votre machine.")
-
-# Zone de question
-question = st.text_input(
-    "💬 Posez votre question :",
-    placeholder="Ex : Quelles sont les conditions pour obtenir une bourse ?"
+# ---------------------------------------------------------------------------
+# Fonctionnalités
+# ---------------------------------------------------------------------------
+theme.section("Ce que fait la plateforme", "4 modules")
+theme.card_grid(
+    [
+        (
+            "Classification automatique",
+            "Un document PDF ou Word est classé dans l'une des 5 catégories "
+            "institutionnelles, avec un score de confiance. La classification doit "
+            "toujours être confirmée par un humain.",
+            "upload",
+        ),
+        (
+            "Questions & réponses sourcées",
+            "Interrogez la base documentaire en langage naturel. Filtrez par catégorie "
+            "ou par fichier : chaque réponse cite les extraits utilisés.",
+            "chat",
+        ),
+        (
+            "Souveraineté des données",
+            "Tout s'exécute en local : modèle via Ollama, base ChromaDB. Aucune donnée "
+            "ne quitte la machine, aucune connexion internet requise.",
+            "shield",
+        ),
+        (
+            "Tableau de bord",
+            "Suivez la répartition des documents par catégorie, l'historique des "
+            "classifications et les statistiques d'utilisation.",
+            "chart",
+        ),
+    ],
+    per_row=2,
 )
 
-if question:
-    # Simuler le temps de traitement (sera remplacé par le vrai RAG)
-    with st.spinner("🔍 Recherche dans les documents..."):
-        time.sleep(2)  # Simulation
-    
-    # Réponse simulée (sera remplacée par le vrai RAG)
-    st.subheader("📝 Réponse")
-    st.info(
-        "Ceci est une réponse simulée. Le vrai RAG sera connecté au Jour 4.\n\n"
-        "La réponse finale s'affichera ici, basée sur les documents "
-        "du corpus institutionnel."
+# ---------------------------------------------------------------------------
+# Catégories
+# ---------------------------------------------------------------------------
+theme.section("Les 5 catégories", f"{STATS['documents']} documents indexés")
+theme.chips([(c["label"], f"· {c['desc']}", "file") for c in CATEGORIES])
+
+# ---------------------------------------------------------------------------
+# Démarrage rapide
+# ---------------------------------------------------------------------------
+theme.section("Démarrage rapide", "3 étapes")
+col1, col2, col3 = st.columns(3, gap="small")
+with col1:
+    theme.html(
+        theme.card(
+            "1 · Uploader",
+            "Déposez un PDF ou un DOCX. Le texte est extrait puis découpé en chunks.",
+            "upload",
+        )
     )
-    
-    # Sources simulées
-    with st.expander("📎 Sources utilisées (3 documents)"):
-        st.write("- 📄 01_reglement_interieur.txt (page 12)")
-        st.write("- 📄 02_guide_bourses.txt (page 3)")
-        st.write("- 📄 05_procedures.txt (page 7)")
-    
-    # Métadonnées
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("⏱️ Temps", "2.3s")
-    with col2:
-        st.metric("📄 Sources", "3")
-    with col3:
-        st.metric("🎯 Confiance", "87%")
+with col2:
+    theme.html(
+        theme.card(
+            "2 · Valider",
+            "Vérifiez la catégorie proposée et son score de confiance, puis confirmez.",
+            "check",
+        )
+    )
+with col3:
+    theme.html(
+        theme.card(
+            "3 · Interroger",
+            "Posez vos questions en français ; les réponses citent leurs sources.",
+            "search",
+        )
+    )
 
-# Historique des questions
-st.divider()
-st.subheader("📜 Historique")
-st.caption("L'historique des questions sera affiché ici.")
+theme.divider()
+
+# ---------------------------------------------------------------------------
+# Actions
+# ---------------------------------------------------------------------------
+left, right, _ = st.columns([1, 1, 2], gap="small")
+with left:
+    if theme.button("Uploader un document", primary=True, full=True):
+        st.switch_page("pages/1_Upload.py")
+with right:
+    if theme.button("Poser une question", full=True):
+        st.switch_page("pages/2_Questions.py")
+
+st.caption(
+    "Maquette — les données affichées sont simulées. Connexion au backend prévue au Jour 5."
+)
