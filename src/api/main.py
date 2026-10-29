@@ -17,6 +17,17 @@ from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+# --- INTÉGRATION JOUR 5 A1.2 : VRAI CLASSIFIEUR ---
+# On garde le mock en fallback si Ollama est coupé
+USE_REAL_CLASSIFIER = False
+try:
+    from src.rag.classifier import classify_with_alternatives
+    USE_REAL_CLASSIFIER = True
+    print("✅ Vrai classifieur chargé (src.rag.classifier)")
+except Exception as e:
+    print(f"⚠️ Classifieur réel indisponible ({e}) -> fallback mock")
+    USE_REAL_CLASSIFIER = False
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 UPLOAD_DIR = PROJECT_ROOT / "data" / "uploads"
 REGISTRY_FILE = PROJECT_ROOT / "data" / "documents_registry.json"
@@ -274,6 +285,46 @@ def classify_text_mock(text: str) -> dict[str, Any]:
     }
 
 
+def classify_text_real(text: str) -> dict[str, Any]:
+    """
+    Classification RÉELLE via le LLM local (Ollama) - Jour 5 A1.2
+    Remplace le mock du Jour 4. Garde le mock en fallback si Ollama est coupé.
+    """
+    if not USE_REAL_CLASSIFIER:
+        return classify_text_mock(text)
+
+    try:
+        result = classify_with_alternatives(text, model_name="llama3.2")
+        primary = result["primary"]
+        alternatives = result.get("alternatives", [])
+        needs_confirmation = result.get("needs_confirmation", False)
+
+        return {
+            "categorie": primary["categorie"],
+            "confiance": primary["confiance"],
+            "justification": primary["justification"],
+            "alternatives": alternatives,
+            "needs_confirmation": needs_confirmation,
+        }
+
+    except Exception as e:
+        # Fallback : si le LLM ne répond pas, on ne fait pas crasher l'API
+        print(f"⚠️ Erreur LLM classification: {e} -> fallback mock")
+        try:
+            # On tente le mock pour ne pas bloquer l'utilisateur
+            mock_result = classify_text_mock(text)
+            mock_result["justification"] = f"[Fallback mock - LLM erreur: {e}] {mock_result['justification']}"
+            return mock_result
+        except:
+            return {
+                "categorie": "Inconnu",
+                "confiance": 0.0,
+                "justification": f"Erreur de classification : {str(e)}",
+                "alternatives": [],
+                "needs_confirmation": True,
+            }
+
+
 def _normalize_text(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", value.casefold())
     return "".join(char for char in normalized if not unicodedata.combining(char))
@@ -300,7 +351,7 @@ def health_check() -> HealthResponse:
 
 @app.post("/api/upload", response_model=ClassificationResult, tags=["Documents"])
 async def upload_document(file: UploadFile = File(...)) -> ClassificationResult:
-    """Sauvegarde, extrait et classe provisoirement un document téléversé."""
+    """Sauvegarde, extrait et classe avec le VRAI LLM (Jour 5 A1.2)."""
     if not file.filename:
         raise HTTPException(status_code=400, detail="Le fichier n'a pas de nom.")
 
@@ -334,7 +385,9 @@ async def upload_document(file: UploadFile = File(...)) -> ClassificationResult:
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     (UPLOAD_DIR / stored_name).write_bytes(content)
 
-    result = classify_text_mock(text)
+    # --- JOUR 5 A1.2 : VRAI CLASSIFIEUR ---
+    result = classify_text_real(text)
+
     return ClassificationResult(
         **result,
         file_id=file_id,
@@ -381,7 +434,7 @@ def confirm_classification(request: ConfirmRequest) -> dict[str, Any]:
         "status": "success",
         "message": (
             f"Document '{original_name}' confirmé et ajouté au registre. "
-            "L'indexation ChromaDB sera connectée lors de l'intégration suivante."
+            "L'indexation ChromaDB sera connectée lors de l'intégration suivante (A2)."
         ),
         "file_id": request.file_id,
         "categorie": request.categorie,
@@ -391,7 +444,7 @@ def confirm_classification(request: ConfirmRequest) -> dict[str, Any]:
 
 @app.post("/api/query", response_model=QueryResponse, tags=["Recherche"])
 def query_documents(request: QueryRequest) -> QueryResponse:
-    """Réponse mock et extraits filtrés ; le vrai pipeline RAG est intégré plus tard."""
+    """Réponse mock et extraits filtrés ; le vrai pipeline RAG est intégré plus tard (A2 Jour 5)."""
     started = time.perf_counter()
     if request.category and request.category not in CATEGORIES:
         raise HTTPException(status_code=400, detail=f"Catégorie invalide. Choix : {CATEGORIES}")
@@ -438,7 +491,7 @@ def query_documents(request: QueryRequest) -> QueryResponse:
     if sources:
         answer = (
             f"[MOCK] {len(sources)} extrait(s) trouvé(s). "
-            "La génération de réponse par le pipeline RAG sera connectée lors de l'intégration."
+            "La génération de réponse par le pipeline RAG sera connectée lors de l'intégration (A2)."
         )
     else:
         answer = "Je ne trouve pas cette information dans les documents disponibles."
