@@ -94,5 +94,21 @@
     "date_ajout": "2026-10-27",
     "type_original": "DOCX",
     "pages": 10
+  },
+  "749d6634_01_reglement_interieur.pdf": {
+    "categorie": "Règlements",
+    "date_ajout": "2026-10-29",
+    "type_original": "PDF",
+    "chunks_count": 19,
+    "status": "indexé",
+    "pages": 6
+  },
+  "faa5b9e3_guide_test.txt": {
+    "categorie": "Guides pratiques",
+    "date_ajout": "2026-10-29",
+    "type_original": "TXT",
+    "chunks_count": 1,
+    "status": "indexé",
+    "pages": 1
   }
 }
