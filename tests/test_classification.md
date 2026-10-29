@@ -1,126 +1,112 @@
 ## Test Classification Zero-Shot
 
 ### TC01 [Facile — Règlements]
-**Extrait :** "Article 15 : Tout étudiant convaincu de fraude lors d'un examen 
-sera immédiatement exclu de l'établissement pour une durée minimale de 2 ans."
+**Extrait :** "Article 1er. - Champ d'application. Le présent règlement s'applique à l'ensemble des étudiants inscrits à l'UVK, quel que soit leur cycle, leur mode de formation et le lieu de leurs activités."
 **Catégorie attendue :** Règlements
-**Confiance attendue :** > 85%
+**Confiance attendue :** > 90%
 
 ### TC02 [Facile — Formulaires]
-**Extrait :** "FORMULAIRE DE DEMANDE DE BOURSE — Année universitaire 2024-2025
-Nom : ___ Prénom : ___ Date de naissance : ___ CIN : ___"
+**Extrait :** "FORMULAIRE DE DEMANDE DE BOURSE — Campagne 2026-2027. Date limite de dépôt : 30 novembre 2026 (16 h 30). Tout dossier incomplet est irrecevable."
 **Catégorie attendue :** Formulaires & documents ponctuels
-**Confiance attendue :** > 90%
+**Confiance attendue :** > 95%
 
 ### TC03 [Moyen — Procédures]
-**Extrait :** "Pour obtenir votre diplôme, suivez les étapes suivantes : 
-1) Vérifiez que tous vos crédits sont validés. 2) Déposez une demande 
-de diplôme au secrétariat. 3) Attendez la convocation pour la cérémonie."
+**Extrait :** "La réinscription s'effectue du 1er octobre au 15 décembre 2026. Entre le 16 et le 31 décembre, une pénalité de 20 000 Ar s'applique. Après le 31 décembre 2026, l'étudiant est radié d'office."
 **Catégorie attendue :** Procédures
-**Confiance attendue :** > 75%
+**Confiance attendue :** > 80%
 
 ### TC04 [Difficile — Ambigu]
-**Extrait :** "Le règlement intérieur prévoit que les étudiants doivent 
-suivre la procédure d'inscription décrite dans le guide de rentrée, 
-en remplissant le formulaire F-2024 avant la date limite du calendrier."
+**Extrait :** "Le présent règlement fixe les modalités d'évaluation des connaissances et des compétences des étudiants de l'UVK, les conditions de tenue des examens, le traitement de la fraude et les règles de délibération des jurys."
 **Catégorie attendue :** Règlements (car c'est le texte normatif qui prime)
-**Confiance attendue :** < 70% (ambigu, mentionne 4 catégories)
+**Confiance attendue :** < 70% (ambigu, mentionne plusieurs catégories)
 **Note :** Ce cas doit déclencher la demande de confirmation utilisateur
 
-### TC05 [Hors domaine]
-**Extrait :** "La recette du ravitoto : prendre des feuilles de manioc, 
-les piler finement, ajouter du porc et du lait de coco..."
-**Catégorie attendue :** Aucune / Inconnu
-**Confiance attendue :** < 50%
-
-### TC06 [Facile — Guides pratiques]
-**Extrait :** "Pour bien préparer votre rentrée universitaire, commencez par 
-consulter le guide, vérifier votre dossier, puis suivez les étapes indiquées."
+### TC05 [Facile — Guides pratiques]
+**Extrait :** "Ce guide présente l'ensemble des dispositifs d'aide financière proposés par l'Université de la Vakinankaratra à ses étudiants. Il précise les critères d'éligibilité, les montants, le calendrier de la campagne 2026-2027."
 **Catégorie attendue :** Guides pratiques
-**Confiance attendue :** > 80%
+**Confiance attendue :** > 85%
 
-### TC07 [Facile — Organisation & plannings]
-**Extrait :** "Calendrier académique 2025-2026 : rentrée le 5 octobre, cours 
-semestre 1 du 14 octobre au 15 janvier, examens du 12 au 30 janvier."
+### TC06 [Facile — Organisation & plannings]
+**Extrait :** "Période Dates Événement. Rentrée 5 octobre 2026. Cours semestre 1 19 oct. 2026 - 15 jan. 2027. Examens semestre 1 12 au 30 janvier 2027."
 **Catégorie attendue :** Organisation & plannings
 **Confiance attendue :** > 90%
 
-### TC08 [Moyen — Règlements]
-**Extrait :** "L'accès à la salle d'examen est subordonné à la présentation de 
-la convocation et de la carte d'étudiant. À défaut, l'accès est refusé."
+### TC07 [Moyen — Règlements]
+**Extrait :** "L'accès à la salle d'examen est subordonné à la présentation de la convocation et de la carte d'étudiant. À défaut, l'accès est refusé."
 **Catégorie attendue :** Règlements
-**Confiance attendue :** > 80%
+**Confiance attendue :** > 85%
 
-### TC09 [Facile — Formulaires]
-**Extrait :** "CONVENTION DE STAGE — Identification des parties, objet du stage, 
-engagements et signatures du stagiaire, de l'organisme d'accueil et de l'université."
+### TC08 [Facile — Formulaires]
+**Extrait :** "CONVENTION DE STAGE. La présente convention est établie entre les trois parties signataires ci-dessous. Aucun stage ne peut débuter avant la signature effective des trois parties."
 **Catégorie attendue :** Formulaires & documents ponctuels
 **Confiance attendue :** > 90%
 
-### TC10 [Moyen — Procédures]
-**Extrait :** "Étape 1 : déposer votre dossier. Étape 2 : payer les frais 
-d'inscription. Étape 3 : valider votre inscription au service de la scolarité."
+### TC09 [Moyen — Procédures]
+**Extrait :** "Étape 1 : se connecter au portail UVK. Étape 2 : compléter le dossier. Étape 3 : payer les frais d'inscription. Étape 4 : valider l'inscription."
 **Catégorie attendue :** Procédures
-**Confiance attendue :** > 80%
+**Confiance attendue :** > 85%
 
-### TC11 [Difficile — Ambigu]
-**Extrait :** "Le guide de mobilité internationale précise les conditions 
-d'éligibilité et les pièces à joindre avant le départ à l'étranger."
+### TC10 [Difficile — Ambigu]
+**Extrait :** "Le guide de mobilité internationale précise les conditions d'éligibilité, la liste des pièces à joindre et les dates de candidature avant le départ à l'étranger."
 **Catégorie attendue :** Guides pratiques
 **Confiance attendue :** < 75% (ambigu, peut ressembler à une procédure)
-**Note :** Ce cas est plus pédagogique que normatif
+**Note :** Le caractère pédagogique domine
 
-### TC12 [Facile — Règlements]
-**Extrait :** "Article 6. - Toute consommation de boissons alcoolisées dans les 
-locaux de l'établissement est interdite et peut être sanctionnée."
+### TC11 [Facile — Règlements]
+**Extrait :** "Article 14. - Silence et étude. Le silence est de rigueur dans les salles de lecture. Les échanges doivent se faire à voix basse dans les espaces de travail collectif prévus à cet effet."
 **Catégorie attendue :** Règlements
 **Confiance attendue :** > 85%
 
-### TC13 [Facile — Organisation & plannings]
-**Extrait :** "L'emploi du temps de la licence est publié avant le début du 
-semestre, et les cours sont répartis sur les semaines du semestre."
+### TC12 [Facile — Organisation & plannings]
+**Extrait :** "L'UVK organise ses formations selon l'architecture Licence - Master - Doctorat (LMD). La licence comprend six semestres et 180 crédits ; le master comprend quatre semestres et 120 crédits."
 **Catégorie attendue :** Organisation & plannings
-**Confiance attendue :** > 85%
+**Confiance attendue :** > 90%
 
-### TC14 [Facile — Guides pratiques]
-**Extrait :** "Voici quelques conseils pratiques pour réussir votre année : 
-organisez votre emploi du temps, consultez votre tuteur et respectez les délais."
+### TC13 [Facile — Guides pratiques]
+**Extrait :** "Voici quelques conseils pratiques pour réussir votre année : organisez votre emploi du temps, prenez contact avec votre tuteur et respectez les délais de dépôt."
 **Catégorie attendue :** Guides pratiques
 **Confiance attendue :** > 80%
 
-### TC15 [Facile — Formulaires]
-**Extrait :** "Déclaration de domicile — attestation de revenus — signature du 
-responsable légal — cachet du chef de quartier."
+### TC14 [Facile — Formulaires]
+**Extrait :** "Déclaration de domicile, attestation de revenus, signature du responsable de famille, cachet du chef de quartier."
 **Catégorie attendue :** Formulaires & documents ponctuels
 **Confiance attendue :** > 85%
 
-### TC16 [Moyen — Procédures]
-**Extrait :** "Pour finaliser votre dossier, téléchargez le formulaire, joignez les 
-pièces demandées, puis déposez le dossier comportant la demande et la quittance."
+### TC15 [Moyen — Procédures]
+**Extrait :** "Pour finaliser votre dossier, téléchargez le formulaire, joignez les pièces demandées, puis déposez le dossier au bureau de la scolarité."
 **Catégorie attendue :** Procédures
 **Confiance attendue :** > 75%
 
-### TC17 [Difficile — Ambigu]
-**Extrait :** "Le calendrier de la rentrée précise les dates de début des cours, 
-la semaine d'intégration et les délais pour les dossiers de bourse et de logement."
+### TC16 [Difficile — Ambigu]
+**Extrait :** "Le calendrier de la rentrée précise les dates de début des cours, la semaine d'intégration et les délais pour les dossiers de bourse et de logement."
 **Catégorie attendue :** Organisation & plannings
 **Confiance attendue :** < 75% (ambigu, mentionne plusieurs catégories)
 **Note :** Le caractère planning domine la structure globale
 
+### TC17 [Hors domaine]
+**Extrait :** "La recette du ravitoto : prendre des feuilles de manioc, les piler finement, ajouter du porc et du lait de coco."
+**Catégorie attendue :** Aucune / Inconnu
+**Confiance attendue :** < 50%
+
 ### TC18 [Facile — Règlements]
-**Extrait :** "Article 10 : Les étudiants doivent présenter leur carte d'étudiant 
-lorsqu'ils accèdent aux services universitaires."
+**Extrait :** "Article 6. - Toute consommation de stupéfiants ou d'alcool dans l'enceinte de la résidence est interdite et sanctionnée conformément au règlement intérieur."
 **Catégorie attendue :** Règlements
-**Confiance attendue :** > 85%
+**Confiance attendue :** > 90%
 
 ### TC19 [Facile — Guides pratiques]
-**Extrait :** "Ce guide explique comment remplir le formulaire de candidature, 
-quelles pièces joindre, et comment vérifier votre dossier avant le dépôt."
+**Extrait :** "Ce guide explique comment remplir le formulaire de candidature, quelles pièces joindre, et comment vérifier votre dossier avant le dépôt."
 **Catégorie attendue :** Guides pratiques
 **Confiance attendue :** > 80%
 
-### TC20 [Hors domaine]
-**Extrait :** "Le prix du marché du café a augmenté de 12 % cette semaine en raison 
-du climat et des coûts de transport."
-**Catégorie attendue :** Aucune / Inconnu
-**Confiance attendue :** < 50%
+### TC20 [Facile — Formulaires]
+**Extrait :** "Réservé au service des bourses. Fait à Antsirabe, le ... / ... / 20... Signature du demandeur :"
+**Catégorie attendue :** Formulaires & documents ponctuels
+**Confiance attendue :** > 90%
+
+---
+
+## Résumé des cas de test
+- 5 catégories couvertes : Règlements, Guides pratiques, Procédures, Organisation & plannings, Formulaires & documents ponctuels
+- 3 cas ambigus : TC04, TC10, TC16
+- 1 cas hors domaine : TC17
+- 20 extraits au total
