@@ -46,6 +46,9 @@ data/chunks/*
 # Base vectorielle générée
 data/chroma_db/
 
+# Résultats d'évaluation locaux (réponses générées / mesures machine)
+tests/results/
+
 # IDE
 .vscode/
 .idea/
