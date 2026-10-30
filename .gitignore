@@ -57,3 +57,12 @@ Thumbs.db
 # Secrets
 .env
 *.key
+
+# --- ajouts B1 (interface) ---
+.pytest_cache/
+.streamlit/machine_id*
+.streamlit/credentials.toml
+preuve_tests_B1.txt
+interface_B1.zip
+*.log
+chroma_db/
