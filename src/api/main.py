@@ -13,8 +13,10 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+import logging
+from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 # --- INTÉGRATION JOUR 5 A1.2 : VRAI CLASSIFIEUR ---
@@ -44,6 +46,20 @@ CATEGORIES = [
     "Formulaires & documents ponctuels",
 ]
 ALLOWED_EXTENSIONS = {".pdf", ".txt", ".docx"}
+# --- JOUR 6 A1 : LOGS ---
+LOG_DIR = PROJECT_ROOT / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_DIR / "app.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger("api")
+logger.info("=== API DocuClassif AI démarrée ===")
+
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(
@@ -554,6 +570,26 @@ def get_categories() -> dict[str, Any]:
         categories[category] = {"nb_documents": len(filenames), "documents": filenames}
     return {"categories": categories, "total_documents": len(registry)}
 
+
+# --- JOUR 6 A1 : GESTION D'ERREURS GLOBALE ---
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    if isinstance(exc, HTTPException):
+        # Laisser FastAPI gérer les HTTPException normalement
+        raise exc
+    logger.error(f"Erreur non gérée sur {request.url}: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"erreur": "Une erreur interne est survenue", "detail": str(exc)}
+    )
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    logger.warning(f"HTTP {exc.status_code} sur {request.url}: {exc.detail}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"erreur": exc.detail, "status_code": exc.status_code}
+    )
 
 # Routes racine et santé historiques conservées pour la compatibilité.
 @app.get("/health", include_in_schema=False)
