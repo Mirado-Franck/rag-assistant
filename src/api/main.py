@@ -79,12 +79,12 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger("api")
-logger.info("=== API DocuClassif AI démarrée ===")
+logger.info("=== API DocuRAG démarrée ===")
 
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(
-    title="DocuClassif AI — API",
+    title="DocuRAG — API",
     description="API de classification et de recherche dans les documents institutionnels",
     version="1.0.0",
 )
@@ -443,8 +443,8 @@ def get_categories() -> dict[str, Any]:
 
 @app.get("/health", include_in_schema=False)
 def legacy_health() -> dict[str, str]:
-    return {"status": "ok", "message": "DocuClassif AI - API fonctionnelle"}
+    return {"status": "ok", "message": "DocuRAG - API fonctionnelle"}
 
 @app.get("/", include_in_schema=False)
 def root() -> dict[str, str]:
-    return {"application": "DocuClassif AI", "version": "1.0.0", "documentation": "/docs"}
+    return {"application": "DocuRAG", "version": "1.0.0", "documentation": "/docs"}

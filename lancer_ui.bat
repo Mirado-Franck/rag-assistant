@@ -1,6 +1,6 @@
 @echo off
 REM ===========================================================
-REM  lancer_ui.bat - Lance l'interface DocuClassif AI (B1)
+REM  lancer_ui.bat - Lance l'interface DocuRAG (B1)
 REM  Double-clic, puis ouvrir http://localhost:8501
 REM ===========================================================
 setlocal

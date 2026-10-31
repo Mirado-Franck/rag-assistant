@@ -1,10 +1,9 @@
 """
-theme.py — Design system de DocuClassif AI (partie B1).
+theme.py — Design system de DocuRAG.
 
-Style « ChatGPT-like » : fond blanc, gris très clair pour la sidebar,
-cartes à bordure fine, coins arrondis, typographie système, zéro emoji
-décoratif. Tout est inline : aucune ressource externe (le projet doit
-rester 100 % offline).
+Style : sidebar indigo, fond de contenu gris très clair, cartes blanches à
+coins arrondis, teintes pastel par catégorie. Aucune ressource externe (le
+projet reste 100 % offline).
 """
 
 from __future__ import annotations
@@ -16,29 +15,32 @@ import streamlit as st
 # ---------------------------------------------------------------------------
 # Palette
 # ---------------------------------------------------------------------------
-INK = "#0d0d0d"
-MUTED = "#5d5d6b"
-FAINT = "#8e8e9a"
+INK = "#17162a"
+MUTED = "#63637a"
+FAINT = "#9a9ab0"
 BG = "#ffffff"
-BG_SOFT = "#f9f9f9"
-BORDER = "#e6e6e6"
-HOVER = "#ececec"
-GREEN = "#10a37f"
+BG_SOFT = "#f4f5fb"       # fond du contenu
+BORDER = "#e5e7f0"
+HOVER = "#eceef8"
+GREEN = "#12a37a"
 AMBER = "#c98a00"
 RED = "#d93025"
 
-# Accent principal (boutons primaires, liens, logo) et teintes par ton.
-# Chaque ton = (couleur vive, fond doux) : utilisé pour les icônes, puces,
-# barres et graphiques. Les 5 catégories ont chacune leur ton fixe.
-ACCENT = "#4f46e5"
-ACCENT_SOFT = "#eef2ff"
+# Sidebar (indigo, comme la référence) et accent principal.
+SIDEBAR = "#5b4bdb"
+SIDEBAR_DEEP = "#4a3bc9"
+ACCENT = "#5b4bdb"
+ACCENT_INK = "#4636b8"
+ACCENT_SOFT = "#efedff"
+
+# Chaque ton = (couleur vive, fond pastel) : icônes, barres, graphiques.
 TONES = {
-    "indigo": ("#4f46e5", "#eef2ff"),
-    "teal": ("#0d9488", "#f0fdfa"),
-    "orange": ("#ea580c", "#fff7ed"),
-    "blue": ("#2563eb", "#eff6ff"),
-    "pink": ("#db2777", "#fdf2f8"),
-    "green": ("#059669", "#ecfdf5"),
+    "indigo": ("#5b4bdb", "#ecebff"),
+    "teal": ("#0f9d8a", "#e4f6f2"),
+    "orange": ("#ec6f1f", "#fff0e4"),
+    "blue": ("#3b7de0", "#e7f0ff"),
+    "pink": ("#de4a86", "#fdeaf2"),
+    "green": ("#12a37a", "#e3f7ef"),
 }
 # Correspondance catégorie -> ton. Clés en minuscules et sans accents, pour
 # accepter les libellés courts de la maquette ET les libellés complets de l'API.
@@ -71,9 +73,22 @@ def category_color(label: str) -> str:
     return category_tone(label)[0]
 
 # ---------------------------------------------------------------------------
-# Icônes (SVG inline, stroke = hérite de la couleur du texte)
+# Icônes (SVG, trait fin). Chaque catégorie et chaque type de fichier a la sienne.
 # ---------------------------------------------------------------------------
 _PATHS = {
+    # types de fichiers
+    "pdf": '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/><text x="12" y="17" font-size="5.2" font-family="Arial,sans-serif" font-weight="700" text-anchor="middle" stroke-width="0.4" fill="currentColor">PDF</text>',
+    "docx": '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/><path d="M8 12h8M8 15h8M8 18h5"/>',
+    "txt": '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 16h6"/>',
+    # catégories
+    "scale": '<path d="M12 3v18M7 21h10"/><path d="M5 7h14"/><path d="M5 7 2 14a3 3 0 0 0 6 0L5 7Z"/><path d="M19 7l-3 7a3 3 0 0 0 6 0l-3-7Z"/>',
+    "book-open": '<path d="M2 5.5C4.5 4 8 4 12 6c4-2 7.5-2 10-.5V19c-2.5-1.5-6-1.5-10 .5-4-2-7.5-2-10-.5V5.5Z"/><path d="M12 6v13.5"/>',
+    "flow-steps": '<rect x="3" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="8" width="7" height="5" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/><path d="M10 5.5h2a2 2 0 0 1 2 2V8M10 18.5h2a2 2 0 0 0 2-2v-3"/>',
+    "calendar-days": '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4m8-4v4"/><path d="M8 14h2M14 14h2M8 17h2"/>',
+    "clipboard-form": '<rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 3h6v3H9z"/><path d="M8 11h8M8 15h8"/>',
+    # navigation et divers
+    "home": '<path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9Z"/>',
+    "collapse": '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="m15 9-3 3 3 3"/>',
     "upload": '<path d="M12 16V4m0 0L8 8m4-4 4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
     "chat": '<path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/><path d="M9 11h6M9 15h3"/>',
     "chart": '<path d="M4 20V10m5 10V4m5 16v-7m5 7V8"/>',
@@ -91,6 +106,29 @@ _PATHS = {
     "sparkle": '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/>',
     "arrow": '<path d="M5 12h14m0 0-5-5m5 5-5 5"/>',
 }
+
+
+_CATEGORY_ICON_KEYS = {
+    "reglements": "scale",
+    "guides pratiques": "book-open",
+    "procedures": "flow-steps",
+    "organisation": "calendar-days",
+    "formulaires": "clipboard-form",
+}
+
+
+def category_icon_name(label: str) -> str:
+    key = _fold(label)
+    for prefix, name in _CATEGORY_ICON_KEYS.items():
+        if key.startswith(prefix):
+            return name
+    return "file"
+
+
+def file_icon_name(filename: str) -> str:
+    """Icône selon l'extension : pdf, docx ou txt (repli générique)."""
+    suffixe = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    return suffixe if suffixe in {"pdf", "docx", "txt"} else "file"
 
 
 def icon(name: str, size: int = 18, color: str = INK, stroke: float = 1.6) -> str:

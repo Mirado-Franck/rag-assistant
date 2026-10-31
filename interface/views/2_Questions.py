@@ -18,7 +18,7 @@ import nav
 import theme
 from config import CATEGORY_LABELS
 
-health, _erreur_api = nav.setup("questions", "Questions & Réponses", "◼")
+health, _erreur_api = nav.page_setup()
 
 PORTEES = ["Tous les documents", "Par catégorie", "Par fichier"]
 AUCUN_FICHIER = "— Aucun fichier confirmé —"

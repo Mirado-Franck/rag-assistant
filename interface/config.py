@@ -1,20 +1,20 @@
 """
-config.py — Constantes de l'interface DocuClassif AI (partie B1, Jour 6).
+config.py — Constantes de l'interface DocuRAG (assistant RAG documentaire).
 
 Les libellés de catégories doivent rester identiques à ceux de l'API
 (src/api/main.py, CATEGORIES) : c'est la clé de tous les filtres. Un test
 de tests/test_ui_b1.py vérifie cette correspondance.
 """
 
-APP_NAME = "DocuClassif AI"
+APP_NAME = "DocuRAG"
 APP_TAGLINE = (
-    "Classification intelligente et assistant questions-réponses "
-    "pour vos documents institutionnels"
+    "Assistant RAG pour vos documents institutionnels : posez vos questions, "
+    "obtenez des réponses sourcées"
 )
 APP_VERSION = "v1.0 · Jour 6"
 
 # Adresse de l'API FastAPI, vue depuis le serveur Streamlit (jamais depuis le navigateur).
-# Surchargeable avec la variable d'environnement DOCUCLASSIF_API_URL.
+# Surchargeable avec la variable d'environnement DOCURAG_API_URL.
 DEFAULT_API_URL = "http://127.0.0.1:8000"
 
 # Les 5 catégories officielles, dans l'ordre de l'API, avec une description courte.

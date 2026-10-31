@@ -75,9 +75,9 @@ for _nom in (
     logging.getLogger(_nom).setLevel(logging.CRITICAL)
 
 APP = str(INTERFACE / "app.py")
-PAGE_UPLOAD = str(INTERFACE / "pages" / "1_Upload.py")
-PAGE_QUESTIONS = str(INTERFACE / "pages" / "2_Questions.py")
-PAGE_DASHBOARD = str(INTERFACE / "pages" / "3_Dashboard.py")
+PAGE_UPLOAD = str(INTERFACE / "views" / "1_Upload.py")
+PAGE_QUESTIONS = str(INTERFACE / "views" / "2_Questions.py")
+PAGE_DASHBOARD = str(INTERFACE / "views" / "3_Dashboard.py")
 PAGES_ATTENDUES = ["1_Upload.py", "2_Questions.py", "3_Dashboard.py"]
 
 TIMEOUT = 60
@@ -248,7 +248,7 @@ def no_exception(at: AppTest, name: str) -> bool:
 
 # --- 5. Structure et contrats ---------------------------------------------
 def test_structure() -> None:
-    pages_dir = INTERFACE / "pages"
+    pages_dir = INTERFACE / "views"
     check("Structure : les 3 pages du plan existent",
           all((pages_dir / nom).exists() for nom in PAGES_ATTENDUES),
           str(sorted(p.name for p in pages_dir.glob("*.py"))))
@@ -259,7 +259,8 @@ def test_structure() -> None:
     check("Structure : modules api_client.py et config.py presents",
           (INTERFACE / "api_client.py").exists() and (INTERFACE / "config.py").exists())
 
-    manquantes = [cible for _, _, _, cible in nav.NAV if not (INTERFACE / cible).exists()]
+    cibles = [nav.PAGE_UPLOAD, nav.PAGE_QUESTIONS, nav.PAGE_DASHBOARD]
+    manquantes = [c for c in cibles if not Path(c).exists()]
     check("Structure : toutes les cibles de navigation existent", not manquantes, str(manquantes))
 
     api_src = (ROOT / "src" / "api" / "main.py").read_text(encoding="utf-8", errors="replace")
@@ -315,9 +316,9 @@ def test_accueil() -> None:
     check("Accueil : les 5 categories sont affichees",
           all(c in txt for c in ["reglements", "guides pratiques", "procedures",
                                  "organisation", "formulaires"]))
-    labels = [b.label for b in at.button]
-    check("Sidebar : 4 entrees de navigation",
-          all(l in labels for l in ["Accueil", "Upload", "Questions", "Tableau de bord"]), str(labels))
+    # Navigation native (st.navigation) : les liens du sidebar ne sont pas des boutons.
+    check("Sidebar : la marque DocuRAG est affichee", "docurag" in page_text(at))
+    check("Sidebar : encadre Systeme present", "systeme" in page_text(at))
 
     scenario(down=True)
     at = run(APP)
@@ -570,8 +571,23 @@ def test_transverse() -> None:
     css = (INTERFACE / "assets" / "style.css").read_text(encoding="utf-8", errors="replace")
     check("Design : CSS du design system present", len(css) > 3000, str(len(css)) + " caracteres")
     check("Design : aucune ressource externe dans le CSS", "http://" not in css and "https://" not in css)
+    bloc_actif = re.search(r'\[data-testid="stSidebarNavLink"\]\[aria-current="page"\],.*?\{(.*?)\}', css, re.S)
+    check("Design : element actif du sidebar sans bordure ni barre (fond seul)",
+          bloc_actif is not None and "border" not in bloc_actif.group(1).replace("border: none", "")
+          and "inset" not in bloc_actif.group(1) and "box-shadow" not in bloc_actif.group(1),
+          bloc_actif.group(1) if bloc_actif else "regle absente")
+    check("Design : bouton de reduction du sidebar force visible",
+          'stSidebarCollapseButton"],' in css and "visibility: visible !important" in css)
+    check("Design : pas de fondu sur les elements obsoletes (anti-clignotement)",
+          'data-stale="true"' in css)
+    bat = (ROOT / "start.bat").read_text(encoding="utf-8", errors="replace")
+    check("start.bat : ouvre le navigateur sur l'interface",
+          'start "" http://localhost:8501' in bat and "curl" in bat)
+    check("Branding : plus de 'DocuClassif' dans l'interface",
+          not any("DocuClassif" in f.read_text(encoding="utf-8", errors="replace")
+                  for f in list(INTERFACE.glob("*.py")) + list((INTERFACE / "views").glob("*.py"))))
 
-    fichiers = list(INTERFACE.glob("*.py")) + list((INTERFACE / "pages").glob("*.py"))
+    fichiers = list(INTERFACE.glob("*.py")) + list((INTERFACE / "views").glob("*.py"))
     reseau = [f.name for f in fichiers
               if re.search(r"^\s*(import httpx|import openai|from openai|import urllib)",
                            f.read_text(encoding="utf-8", errors="replace"), re.MULTILINE)]
@@ -594,7 +610,7 @@ def test_transverse() -> None:
 def main() -> int:
     say("")
     say("=" * 62)
-    say("  Tests interface DocuClassif AI - partie B1 (Jour 6)")
+    say("  Tests interface DocuRAG - partie B1 (Jour 6)")
     say("=" * 62)
     say("")
 
