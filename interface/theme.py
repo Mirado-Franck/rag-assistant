@@ -215,9 +215,30 @@ def stat_cards(items: list[dict]) -> None:
             )
 
 
-def badge(text: str, warn: bool = False) -> str:
-    cls = "dc-badge warn" if warn else "dc-badge"
+def badge(text: str, warn: bool = False, error: bool = False) -> str:
+    """Pastille d'état : verte (défaut), ambre (warn) ou rouge (error)."""
+    cls = "dc-badge error" if error else ("dc-badge warn" if warn else "dc-badge")
     return f'<span class="{cls}"><span class="dot"></span>{text}</span>'
+
+
+def stepper(steps: list[str], current: int) -> None:
+    """Barre d'étapes. current = index (0-based) de l'étape en cours."""
+    parts = []
+    for i, label in enumerate(steps):
+        etat = "done" if i < current else ("active" if i == current else "todo")
+        marque = "&#10003;" if etat == "done" else str(i + 1)
+        parts.append(
+            f'<div class="dc-step {etat}"><span class="dc-step-num">{marque}</span>'
+            f'<span class="dc-step-label">{label}</span></div>'
+        )
+    html(f'<div class="dc-stepper">{"".join(parts)}</div>')
+
+
+def error_box(message: str) -> None:
+    """Encart d'erreur lisible (remplace les exceptions Streamlit)."""
+    html(
+        f'<div class="dc-error"><b>Connexion impossible</b><br>{message}</div>'
+    )
 
 
 def chips(items: list[tuple[str, str, str]]) -> None:
@@ -265,7 +286,8 @@ def sidebar_system(rows: list[tuple[str, str]], note: str) -> None:
 # Helpers compatibles entre versions de Streamlit (API `width=` récente)
 # ---------------------------------------------------------------------------
 def button(label: str, *, key: str | None = None, primary: bool = False,
-           full: bool = False, help: str | None = None) -> bool:
+           full: bool = False, help: str | None = None, disabled: bool = False,
+           on_click=None) -> bool:
     base: dict = {}
     if key:
         base["key"] = key
@@ -273,6 +295,10 @@ def button(label: str, *, key: str | None = None, primary: bool = False,
         base["help"] = help
     if primary:
         base["type"] = "primary"
+    if disabled:
+        base["disabled"] = True
+    if on_click is not None:
+        base["on_click"] = on_click
     variants = ({"width": "stretch"}, {"use_container_width": True}) if full else ({},)
     for extra in variants:
         try:

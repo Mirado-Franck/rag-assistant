@@ -305,3 +305,36 @@ code {
   background: linear-gradient(180deg, #f7f7ff 0%, #ffffff 100%);
 }
 .dc-divider { border-top: 1px solid var(--border); margin: 1.25rem 0 .9rem 0; }
+
+/* ---------- Barre d'étapes (page Upload) ---------- */
+.dc-stepper { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin: .3rem 0 1rem 0; }
+.dc-step {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .38rem .75rem .38rem .4rem; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--bg); font-size: .8rem; color: var(--faint);
+}
+.dc-step-num {
+  width: 22px; height: 22px; border-radius: 99px; display: inline-flex; align-items: center;
+  justify-content: center; font-size: .72rem; font-weight: 650; background: #f1f1f5; color: var(--muted);
+}
+.dc-step.active { border-color: #c7c7ef; background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
+.dc-step.active .dc-step-num { background: var(--accent); color: #fff; }
+.dc-step.done { color: var(--green); }
+.dc-step.done .dc-step-num { background: #d1fae5; color: #047857; }
+
+/* ---------- Erreurs, badges d'état ---------- */
+.dc-error {
+  border: 1px solid #fecaca; background: #fef2f2; color: #991b1b;
+  border-radius: 12px; padding: .8rem 1rem; font-size: .85rem; line-height: 1.5; margin: .4rem 0;
+}
+.dc-badge.error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.dc-badge.error .dot { background: var(--red); }
+.dc-note {
+  border-left: 3px solid var(--amber); background: #fffbeb; color: #7c5a00;
+  border-radius: 8px; padding: .55rem .75rem; font-size: .8rem; margin: .4rem 0;
+}
+.dc-alt-row { display: flex; align-items: center; gap: .6rem; font-size: .83rem; padding: .25rem 0; }
+.dc-alt-row .name { flex: 1; color: var(--ink); }
+.dc-alt-row .pct { width: 3.2rem; text-align: right; font-weight: 600; color: var(--muted); }
+.dc-alt-row .bar { width: 130px; height: 6px; border-radius: 99px; background: #efefef; overflow: hidden; }
+.dc-alt-row .bar i { display: block; height: 100%; border-radius: 99px; }

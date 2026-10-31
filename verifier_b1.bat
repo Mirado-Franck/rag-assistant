@@ -53,7 +53,8 @@ set MANQUANTS=0
 call :check interface\app.py
 call :check interface\nav.py
 call :check interface\theme.py
-call :check interface\data_mock.py
+call :check interface\config.py
+call :check interface\api_client.py
 call :check interface\requirements.txt
 call :check interface\assets\style.css
 call :check interface\.streamlit\config.toml

@@ -31,7 +31,7 @@ py -m pip install -r interface\requirements.txt
 > Si `py` n'existe pas, utilise `python` à la place.
 > Si tu as déjà Streamlit installé pour le projet, cette étape ne change rien.
 
-Vérifie la structure (tu dois voir `app.py`, `nav.py`, `theme.py`, `data_mock.py`, `pages\`) :
+Vérifie la structure (tu dois voir `app.py`, `nav.py`, `theme.py`, `config.py`, `api_client.py`, `pages\`) :
 
 ```bat
 dir interface
