@@ -87,7 +87,8 @@ rag-assistant\
 │   ├── app.py                  <- NOUVEAU (l'accueil)
 │   ├── nav.py
 │   ├── theme.py
-│   ├── data_mock.py
+│   ├── config.py
+│   ├── api_client.py
 │   ├── requirements.txt
 │   ├── README_B1.md
 │   ├── assets\style.css
