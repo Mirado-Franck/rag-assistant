@@ -20,7 +20,7 @@ import nav
 import theme
 from config import CATEGORIES
 
-health, _erreur_api = nav.setup("dashboard", "Tableau de bord", "◼")
+health, _erreur_api = nav.page_setup()
 
 CATEGORY_NAMES = [c["label"] for c in CATEGORIES]
 
@@ -140,8 +140,8 @@ with col_list:
     lignes = "".join(
         '<div style="margin-bottom:.7rem">'
         '<div class="dc-rowline" style="padding:.1rem 0">'
-        f'<span style="font-size:.83rem;color:{theme.INK};display:flex;align-items:center;gap:.45rem">'
-        f'<i style="width:8px;height:8px;border-radius:99px;background:{theme.category_color(nom)};display:inline-block"></i>{nom}</span>'
+        f'<span style="font-size:.83rem;color:{theme.INK};display:flex;align-items:center;gap:.5rem">'
+        f'{theme.icon(theme.category_icon_name(nom), 15, theme.category_color(nom))}{nom}</span>'
         f'<b style="font-size:.8rem">{nombres[nom]}</b></div>'
         '<div style="height:5px;border-radius:99px;background:#f1f1f1;overflow:hidden">'
         f'<div style="height:5px;width:{round(nombres[nom] / maxi * 100)}%;background:{theme.category_color(nom)};border-radius:99px"></div>'

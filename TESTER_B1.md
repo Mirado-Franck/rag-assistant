@@ -31,7 +31,7 @@ py -m pip install -r interface\requirements.txt
 > Si `py` n'existe pas, utilise `python` à la place.
 > Si tu as déjà Streamlit installé pour le projet, cette étape ne change rien.
 
-Vérifie la structure (tu dois voir `app.py`, `nav.py`, `theme.py`, `config.py`, `api_client.py`, `pages\`) :
+Vérifie la structure (tu dois voir `app.py`, `nav.py`, `theme.py`, `config.py`, `api_client.py`, `views\`) :
 
 ```bat
 dir interface
@@ -174,7 +174,7 @@ Ordre de démo le plus convaincant :
 
 | Message | Cause | Solution |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'nav'` | Tu lances `streamlit run interface/pages/1_Upload.py` directement | Lance **toujours** `python -m streamlit run interface\app.py` |
+| `ModuleNotFoundError: No module named 'nav'` | Tu lances `streamlit run interface/app.py` directement | Lance **toujours** `python -m streamlit run interface\app.py` |
 | `ModuleNotFoundError: No module named 'streamlit'` | Dépendances pas installées | `py -m pip install -r interface\requirements.txt` |
 | `Port 8501 is already in use` | Une ancienne instance tourne | Ferme l'autre fenêtre, ou `python -m streamlit run interface\app.py --server.port 8502` |
 | `TypeError: button() got an unexpected keyword argument 'width'` | Streamlit trop ancien (< 1.33) | `py -m pip install -U "streamlit>=1.40"` |

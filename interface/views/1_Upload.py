@@ -22,7 +22,7 @@ import nav
 import theme
 from config import CATEGORY_LABELS, EXEMPLE_TEXTE
 
-health, _erreur_api = nav.setup("upload", "Upload & Classification", "◼")
+health, _erreur_api = nav.page_setup()
 
 ETAPES = ["Dépôt", "Extraction", "Proposition", "Confirmation"]
 PLACEHOLDER = "— Choisissez une catégorie —"
@@ -81,7 +81,7 @@ def barres_alternatives(items: list[dict]) -> str:
 # En-tête + étapes
 # ---------------------------------------------------------------------------
 theme.page_header(
-    "Upload & Classification",
+    "Ajouter un document",
     "Déposez un document : il est classé automatiquement, puis validé par vous.",
     eyebrow="Étape 1",
 )
@@ -149,7 +149,7 @@ elif st.session_state["up_step"] == 1:
     theme.html(
         '<div class="dc-card">'
         f'<div style="font-size:.8rem;color:{theme.MUTED};margin-bottom:.4rem">'
-        f'{theme.icon("file", 14, theme.MUTED)} Fichier : <b style="color:{theme.INK}">{res["filename"]}</b></div>'
+        f'{theme.icon(theme.file_icon_name(res["filename"]), 14, theme.MUTED)} Fichier : <b style="color:{theme.INK}">{res["filename"]}</b></div>'
         f'<h5>Texte extrait (aperçu)</h5>'
         f'<div style="white-space:pre-wrap;font-size:.8rem;color:{theme.MUTED};'
         f'background:{theme.BG_SOFT};border:1px solid {theme.BORDER};border-radius:10px;'
@@ -185,7 +185,7 @@ elif st.session_state["up_step"] == 2:
         theme.html(
             f'<div class="dc-card" style="border-top:3px solid {couleur}">'
             f'<div style="display:flex;align-items:center;gap:.45rem;font-size:.76rem;color:{theme.MUTED}">'
-            f'{theme.icon("file", 14, theme.MUTED)} {nom}</div>'
+            f'{theme.icon(theme.file_icon_name(nom), 14, theme.MUTED)} {nom}</div>'
             f'<div style="font-size:1.35rem;font-weight:640;letter-spacing:-.02em;margin:.45rem 0 .1rem 0;color:{couleur}">'
             f"{proposee}</div>"
             f'<p style="margin:0;font-size:.82rem;color:{theme.MUTED}">Catégorie proposée par le modèle</p>'
@@ -337,7 +337,7 @@ elif st.session_state["up_step"] == 3:
     c1, c2, _ = st.columns([1, 1.2, 2], gap="small")
     with c1:
         if theme.button("Poser une question", primary=True, full=True):
-            st.switch_page("pages/2_Questions.py")
+            st.switch_page(nav.PAGE_QUESTIONS)
     with c2:
         if theme.button("Analyser un autre document", full=True):
             reinitialiser()

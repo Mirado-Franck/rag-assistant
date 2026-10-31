@@ -16,7 +16,9 @@ import requests
 
 from config import DEFAULT_API_URL, SEUIL_CONFIANCE_HAUTE, SEUIL_CONFIANCE_MOYENNE
 
-API_URL = os.environ.get("DOCUCLASSIF_API_URL", DEFAULT_API_URL).rstrip("/")
+API_URL = (
+    os.environ.get("DOCURAG_API_URL") or os.environ.get("DOCUCLASSIF_API_URL") or DEFAULT_API_URL
+).rstrip("/")  # ancien nom accepté
 
 # Délais (secondes). L'upload et la requête RAG peuvent dépasser une minute
 # quand Ollama tourne sur CPU.

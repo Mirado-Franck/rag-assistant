@@ -1,4 +1,4 @@
-# DocuClassif AI — Interface (partie B1, Jour 6)
+# DocuRAG — Interface (partie B1, Jour 6)
 
 Interface Streamlit branchée sur l'API FastAPI locale (`src/api/main.py`).
 Design sobre (fond blanc, cartes fines, palette par catégorie), icônes SVG inline.
@@ -20,7 +20,7 @@ interface/
 ├── api_client.py           → seul module qui appelle l'API (requests, timeouts, messages d'erreur)
 ├── assets/style.css        → CSS du design system
 ├── .streamlit/config.toml  → thème clair, toolbar masquée
-└── pages/
+└── views/                  → pages (chargées par st.navigation, pas par le dossier pages/)
     ├── 1_Upload.py         → Upload & Classification en 4 étapes
     ├── 2_Questions.py      → Questions & Réponses (chat, filtres, sources)
     └── 3_Dashboard.py      → Tableau de bord (statistiques réelles)

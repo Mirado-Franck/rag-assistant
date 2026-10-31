@@ -9,7 +9,7 @@ cd /d "%~dp0"
 
 echo.
 echo ==========================================================
-echo   DocuClassif AI - verification de la partie B1
+echo   DocuRAG - verification de la partie B1
 echo ==========================================================
 echo Projet : %CD%
 echo.
@@ -58,9 +58,9 @@ call :check interface\api_client.py
 call :check interface\requirements.txt
 call :check interface\assets\style.css
 call :check interface\.streamlit\config.toml
-call :check interface\pages\1_Upload.py
-call :check interface\pages\2_Questions.py
-call :check interface\pages\3_Dashboard.py
+call :check interface\views\1_Upload.py
+call :check interface\views\2_Questions.py
+call :check interface\views\3_Dashboard.py
 call :check tests\test_ui_b1.py
 
 if not %MANQUANTS%==0 (
@@ -73,16 +73,16 @@ if not %MANQUANTS%==0 (
 
 REM --- Restes de l'ancienne version ----------------------------------------
 set RESTES=0
-for %%F in (interface\pages\*.py) do (
+for %%F in (interface\views\*.py) do (
   if /I not "%%~nxF"=="1_Upload.py" if /I not "%%~nxF"=="2_Questions.py" if /I not "%%~nxF"=="3_Dashboard.py" (
     set RESTES=1
     echo.
-    echo       ATTENTION : fichier en trop : interface\pages\%%~nxF
+    echo       ATTENTION : fichier en trop : interface\views\%%~nxF
   )
 )
 if %RESTES%==1 (
   echo       Ce sont des restes de l'ancienne version. Supprime-les :
-  echo         del "interface\pages\NOM_DU_FICHIER.py"
+  echo         del "interface\views\NOM_DU_FICHIER.py"
   echo       ^(ou refais l'etape 2 du guide pour repartir propre^)
 )
 
@@ -90,7 +90,7 @@ findstr /C:"st.page_link(" "interface\app.py" >nul 2>&1
 if not errorlevel 1 (
   echo.
   echo       ATTENTION : interface\app.py est l'ANCIENNE version
-  echo       ^(elle contient st.page_link vers pages\Upload.py^).
+  echo       ^(elle contient st.page_link vers views\Upload.py^).
   echo       Remplace-la par celle de l'archive : GUIDE_INSTALLATION_B1.md etape 2.
 )
 
