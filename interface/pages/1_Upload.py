@@ -132,10 +132,11 @@ else:
 
     with res_col:
         theme.html(
-            f'<div class="dc-card">'
+            f'<div class="dc-card" style="border-top:3px solid {theme.category_color(analyse["categorie"])}">'
             f'<div style="display:flex;align-items:center;gap:.45rem;font-size:.76rem;color:{theme.MUTED}">'
             f'{theme.icon("file", 14, theme.MUTED)} {nom_fichier}</div>'
-            f'<div style="font-size:1.35rem;font-weight:640;letter-spacing:-.02em;margin:.45rem 0 .1rem 0">'
+            f'<div style="font-size:1.35rem;font-weight:640;letter-spacing:-.02em;margin:.45rem 0 .1rem 0;'
+            f'color:{theme.category_color(analyse["categorie"])}">'
             f'{analyse["categorie"]}</div>'
             f'<p style="margin:0;font-size:.82rem;color:{theme.MUTED}">Catégorie proposée par le modèle</p>'
             f"{confidence_meter(analyse['confiance'])}"

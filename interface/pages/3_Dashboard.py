@@ -52,10 +52,10 @@ with head_r:
 theme.section("Statistiques générales", "mise à jour en temps réel")
 theme.stat_cards(
     [
-        {"label": "Documents", "value": STATS["documents"], "delta": f"+{STATS['documents_delta']} cette semaine"},
-        {"label": "Chunks", "value": STATS["chunks"], "delta": "moy. 19 / document", "muted": True},
-        {"label": "Questions posées", "value": STATS["questions"], "delta": "7 derniers jours", "muted": True},
-        {"label": "Classifications", "value": STATS["classifications"], "delta": f"{STATS['confirmation_rate']} % confirmées"},
+        {"label": "Documents", "value": STATS["documents"], "delta": f"+{STATS['documents_delta']} cette semaine", "tone": "indigo"},
+        {"label": "Chunks", "value": STATS["chunks"], "delta": "moy. 19 / document", "muted": True, "tone": "blue"},
+        {"label": "Questions posées", "value": STATS["questions"], "delta": "7 derniers jours", "muted": True, "tone": "teal"},
+        {"label": "Classifications", "value": STATS["classifications"], "delta": f"{STATS['confirmation_rate']} % confirmées", "tone": "orange"},
     ]
 )
 
@@ -74,8 +74,16 @@ with col_chart:
 
     bars = (
         alt.Chart(df_cat)
-        .mark_bar(size=38, cornerRadiusTopLeft=5, cornerRadiusTopRight=5, color=INK)
+        .mark_bar(size=38, cornerRadiusTopLeft=6, cornerRadiusTopRight=6)
         .encode(
+            color=alt.Color(
+                "Catégorie:N",
+                legend=None,
+                scale=alt.Scale(
+                    domain=[c["label"] for c in CATEGORIES],
+                    range=[theme.category_color(c["label"]) for c in CATEGORIES],
+                ),
+            ),
             x=alt.X(
                 "Catégorie:N",
                 sort=[c["label"] for c in CATEGORIES],
@@ -100,10 +108,11 @@ with col_list:
     rows = "".join(
         f'<div style="margin-bottom:.7rem">'
         f'<div class="dc-rowline" style="padding:.1rem 0">'
-        f'<span style="font-size:.83rem;color:{theme.INK}">{c["label"]}</span>'
+        f'<span style="font-size:.83rem;color:{theme.INK};display:flex;align-items:center;gap:.45rem">'
+        f'<i style="width:8px;height:8px;border-radius:99px;background:{theme.category_color(c["label"])};display:inline-block"></i>{c["label"]}</span>'
         f'<b style="font-size:.8rem">{c["count"]}</b></div>'
         f'<div style="height:5px;border-radius:99px;background:#f1f1f1;overflow:hidden">'
-        f'<div style="height:5px;width:{round(c["count"] / maxi * 100)}%;background:{INK};border-radius:99px"></div>'
+        f'<div style="height:5px;width:{round(c["count"] / maxi * 100)}%;background:{theme.category_color(c["label"])};border-radius:99px"></div>'
         f"</div></div>"
         for c in CATEGORIES
     )
@@ -124,12 +133,12 @@ import altair as alt
 area = (
     alt.Chart(activite)
     .mark_area(
-        line={"color": INK, "strokeWidth": 2},
+        line={"color": theme.ACCENT, "strokeWidth": 2.5},
         color=alt.Gradient(
             gradient="linear",
             stops=[
-                alt.GradientStop(color="rgba(13,13,13,0.14)", offset=0),
-                alt.GradientStop(color="rgba(13,13,13,0.01)", offset=1),
+                alt.GradientStop(color="rgba(79,70,229,0.22)", offset=0),
+                alt.GradientStop(color="rgba(79,70,229,0.01)", offset=1),
             ],
             x1=1, x2=1, y1=1, y2=0,
         ),

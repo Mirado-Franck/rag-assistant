@@ -44,24 +44,28 @@ theme.card_grid(
             "institutionnelles, avec un score de confiance. La classification doit "
             "toujours être confirmée par un humain.",
             "upload",
+            "indigo",
         ),
         (
             "Questions & réponses sourcées",
             "Interrogez la base documentaire en langage naturel. Filtrez par catégorie "
             "ou par fichier : chaque réponse cite les extraits utilisés.",
             "chat",
+            "teal",
         ),
         (
             "Souveraineté des données",
             "Tout s'exécute en local : modèle via Ollama, base ChromaDB. Aucune donnée "
             "ne quitte la machine, aucune connexion internet requise.",
             "shield",
+            "green",
         ),
         (
             "Tableau de bord",
             "Suivez la répartition des documents par catégorie, l'historique des "
             "classifications et les statistiques d'utilisation.",
             "chart",
+            "orange",
         ),
     ],
     per_row=2,
@@ -84,6 +88,7 @@ with col1:
             "1 · Uploader",
             "Déposez un PDF ou un DOCX. Le texte est extrait puis découpé en chunks.",
             "upload",
+            "indigo",
         )
     )
 with col2:
@@ -92,6 +97,7 @@ with col2:
             "2 · Valider",
             "Vérifiez la catégorie proposée et son score de confiance, puis confirmez.",
             "check",
+            "teal",
         )
     )
 with col3:
@@ -100,6 +106,7 @@ with col3:
             "3 · Interroger",
             "Posez vos questions en français ; les réponses citent leurs sources.",
             "search",
+            "orange",
         )
     )
 

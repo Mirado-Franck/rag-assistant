@@ -27,6 +27,49 @@ GREEN = "#10a37f"
 AMBER = "#c98a00"
 RED = "#d93025"
 
+# Accent principal (boutons primaires, liens, logo) et teintes par ton.
+# Chaque ton = (couleur vive, fond doux) : utilisé pour les icônes, puces,
+# barres et graphiques. Les 5 catégories ont chacune leur ton fixe.
+ACCENT = "#4f46e5"
+ACCENT_SOFT = "#eef2ff"
+TONES = {
+    "indigo": ("#4f46e5", "#eef2ff"),
+    "teal": ("#0d9488", "#f0fdfa"),
+    "orange": ("#ea580c", "#fff7ed"),
+    "blue": ("#2563eb", "#eff6ff"),
+    "pink": ("#db2777", "#fdf2f8"),
+    "green": ("#059669", "#ecfdf5"),
+}
+# Correspondance catégorie -> ton. Clés en minuscules et sans accents, pour
+# accepter les libellés courts de la maquette ET les libellés complets de l'API.
+_CATEGORY_TONE_KEYS = {
+    "reglements": "indigo",
+    "guides pratiques": "teal",
+    "procedures": "orange",
+    "organisation": "blue",
+    "formulaires": "pink",
+}
+
+
+def _fold(value: str) -> str:
+    import unicodedata
+
+    value = unicodedata.normalize("NFKD", value.casefold())
+    return "".join(c for c in value if not unicodedata.combining(c)).strip()
+
+
+def category_tone(label: str) -> tuple[str, str]:
+    """Renvoie (couleur, fond doux) d'une catégorie ; repli sur l'accent."""
+    key = _fold(label)
+    for prefix, tone in _CATEGORY_TONE_KEYS.items():
+        if key.startswith(prefix):
+            return TONES[tone]
+    return TONES["indigo"]
+
+
+def category_color(label: str) -> str:
+    return category_tone(label)[0]
+
 # ---------------------------------------------------------------------------
 # Icônes (SVG inline, stroke = hérite de la couleur du texte)
 # ---------------------------------------------------------------------------
@@ -118,6 +161,7 @@ def inject() -> None:
 def page_header(title: str, subtitle: str, eyebrow: str = "") -> None:
     html(
         f"""<div class="dc-page">
+        <div class="dc-accent"></div>
         {f'<div class="dc-eyebrow">{eyebrow}</div>' if eyebrow else ''}
         <div class="dc-title">{title}</div>
         <p class="dc-subtitle">{subtitle}</p>
@@ -132,34 +176,42 @@ def section(title: str, hint: str = "") -> None:
     )
 
 
-def card(title: str, body: str, ico: str = "file") -> str:
+def card(title: str, body: str, ico: str = "file", tone: str = "indigo") -> str:
+    color, soft = TONES.get(tone, TONES["indigo"])
     return (
-        f'<div class="dc-card"><div class="dc-card-icon">{icon(ico, 16)}</div>'
+        f'<div class="dc-card"><div class="dc-card-icon" '
+        f'style="background:{soft};border-color:transparent;color:{color}">{icon(ico, 16, color)}</div>'
         f"<h5>{title}</h5><p>{body}</p></div>"
     )
 
 
-def card_grid(items: list[tuple[str, str, str]], per_row: int = 2) -> None:
-    """Affiche une grille de cartes (title, body, icon)."""
+def card_grid(items: list[tuple], per_row: int = 2) -> None:
+    """Affiche une grille de cartes (title, body, icon[, tone])."""
     rows = [items[i : i + per_row] for i in range(0, len(items), per_row)]
     for row in rows:
         cols = st.columns(len(row), gap="small")
-        for col, (title, body, ico) in zip(cols, row):
+        for col, item in zip(cols, row):
+            title, body, ico = item[:3]
+            tone = item[3] if len(item) > 3 else "indigo"
             with col:
-                html(card(title, body, ico))
+                html(card(title, body, ico, tone))
 
 
 def stat_cards(items: list[dict]) -> None:
-    """items = [{'label','value','delta'(opt),'muted'(bool)}]"""
+    """items = [{'label','value','delta'(opt),'muted'(bool),'tone'(opt)}]"""
     cols = st.columns(len(items), gap="small")
     for col, it in zip(cols, items):
         delta = it.get("delta", "")
+        color, soft = TONES.get(it.get("tone", "indigo"), TONES["indigo"])
         cls = "dc-stat-delta muted" if it.get("muted") else "dc-stat-delta"
+        style = "" if it.get("muted") else f' style="color:{color}"'
+        delta_html = f'<div class="{cls}"{style}>{delta}</div>' if delta else ""
         with col:
             html(
-                f'<div class="dc-stat"><div class="dc-stat-label">{it["label"]}</div>'
+                f'<div class="dc-stat" style="border-top:3px solid {color}">'
+                f'<div class="dc-stat-label">{it["label"]}</div>'
                 f'<div class="dc-stat-value">{it["value"]}</div>'
-                f'{f"<div class={cls}>{delta}</div>" if delta else ""}</div>'
+                f"{delta_html}</div>"
             )
 
 
@@ -169,13 +221,16 @@ def badge(text: str, warn: bool = False) -> str:
 
 
 def chips(items: list[tuple[str, str, str]]) -> None:
-    """items = [(label, count, icon)]"""
-    markup = "".join(
-        f'<span class="dc-chip"><span class="dc-chip-ico">{icon(i, 12)}</span>'
-        f"<b>{label}</b> {count}</span>"
-        for label, count, i in items
-    )
-    html(f"<div>{markup}</div>")
+    """items = [(label, count, icon)] — la couleur suit la catégorie du libellé."""
+    parts = []
+    for label, count, i in items:
+        color, soft = category_tone(label)
+        parts.append(
+            f'<span class="dc-chip" style="background:{soft};border-color:{soft}">'
+            f'<span class="dc-chip-ico" style="background:#fff;color:{color}">{icon(i, 12, color)}</span>'
+            f'<b style="color:{color}">{label}</b> {count}</span>'
+        )
+    html(f"<div>{''.join(parts)}</div>")
 
 
 def kv(items: list[tuple[str, str]]) -> None:
